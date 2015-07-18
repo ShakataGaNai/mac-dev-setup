@@ -1,26 +1,20 @@
 # Mac OS X Dev Setup
 
-This document describes how I set up my development environment on a new OSX machine. We will set up [Node](http://nodejs.org/) (JavaScript).  This is a fork of [/nicolashery/mac-dev-setup](https://github.com/nicolashery/mac-dev-setup) original instructions.
+This document describes how I set up my development environment on a new OSX machine. It is around set up around [NodeJS](http://nodejs.org/) and general web development. This is heavily modified fork of [/nicolashery/mac-dev-setup](https://github.com/nicolashery/mac-dev-setup), which I used for my original inspiration.
 
-The document assumes you are somehwat new to Mac. The steps below were tested on **OS X Yosemitie (10.10)**.
+The document assumes you are familiar with a Mac. The steps below were tested on **OS X Yosemite (10.10)**.
 
-If you have any comments or suggestions, feel free to give me a shout [on Twitter](https://twitter.com/ShakataGaNai)!
+Comments? Feel free to yell at me, [@ShakataGaNai](https://twitter.com/ShakataGaNai), on twitter.
 
+## Table of contents
 - [System update](#system-update)
 - [System preferences](#system-preferences)
 - [Google Chrome](#google-chrome)
 - [iTerm2](#iterm2)
 - [Homebrew](#homebrew)
-- [Consolas](#consolas)
-- [Beautiful terminal](#beautiful-terminal)
 - [iTerm2](#iterm2)
 - [Git](#git)
 - [Sublime Text](#sublime-text)
-- [Vim](#vim)
-- [Python](#python)
-- [Virtualenv](#virtualenv)
-- [IPython](#ipython)
-- [Numpy and Scipy](#numpy-and-scipy)
 - [MySQL](#mysql)
 - [Node.js](#nodejs)
 - [JSHint](#jshint)
@@ -37,16 +31,43 @@ If you have any comments or suggestions, feel free to give me a shout [on Twitte
 
 First thing you need to do, on any OS actually, is update the system! For that: **Apple Icon > Software Update...**
 
+## Apps to install
+* [Google Chrome](https://www.google.com/intl/en/chrome/browser/)
+* [iTerm2](http://www.iterm2.com/)
+* Github
+* Atom.io
+* If you plan on using MySQL later, install either:
+ * [Sequel Pro](http://www.sequelpro.com/) -- Free & Very attractive
+ * [MySQL Workbench](http://www.mysql.com/products/workbench/) -- Official & Free
+* Slack (or your favorite chat system)
+*
 
-## Google Chrome
 
-Install your favorite browser, mine happens to be Chrome.
+## Fix OSX
 
-Download from [www.google.com/chrome](https://www.google.com/intl/en/chrome/browser/).
+* Show all the things on the desktop
+$ defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+$ defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+$ defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+$ defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 
-## iTerm2
+* Fix finder
+$ defaults write com.apple.finder AppleShowAllFiles YES
+$ defaults write com.apple.finder NewWindowTarget PfHm  
+$ defaults write com.apple.finder ShowStatusBar -bool true
+$ defaults write com.apple.finder ShowPathbar -bool true
+$ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 
-Since we're going to be spending a lot of time in the command-line, let's install a better terminal than the default one. Download and install [iTerm2](http://www.iterm2.com/) (the newest version, even if it says "beta release").
+
+* Show ~/Library
+$ chflags nohidden "${HOME}/Library"
+$ defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
+* sudo softwareupdate --schedule on
+* softwareupdate --list
+* softwareupdate --install --all
+
+* Lets not spam the desktop with Screenshots
+mkdir ~/Desktop/Screenshots/; defaults write com.apple.screencapture location ~/Desktop/Screenshots; sudo killall SystemUIServer
 
 ## Homebrew
 
@@ -54,17 +75,8 @@ Package managers make it so much easier to install and update applications (for 
 
 ### Install
 
-An important dependency before Homebrew can work is the **Command Line Tools** for **Xcode**. These include compilers that will allow you to build things from source.
-
-Now, Xcode weights something like 2GB, and you don't need it unless you're developing iPhone or Mac apps. Good news is Apple provides a way to install only the Command Line Tools, without Xcode. To do this you need to go to [http://developer.apple.com/downloads](http://developer.apple.com/downloads), and sign in with your Apple ID (the same one you use for iTunes and app purchases). Unfortunately, you're greeted by a rather annoying questionnaire. All questions are required, so feel free to answer at random.
-
-Once you reach the downloads page, search for "command line tools", and download the latest **Command Line Tools (OS X Mountain Lion) for Xcode**. Open the **.dmg** file once it's done downloading, and double-click on the **.mpkg** installer to launch the installation. When it's done, you can unmount the disk in Finder.
-
-**Note**: If you are running **OS X 10.9 Mavericks**, then you can install the Xcode Command Line Tools directly from the command line with `$ xcode-select --install`, and you don't have to go through the download page and the questionnaire.
-
-Finally, we can install Hombrew! In the terminal paste the following line (without the `$`), hit **Enter**, and follow the steps on the screen:
-
-    $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+ $ xcode-select --install
+ $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 One thing we need to do is tell the system to use programs installed by Hombrew (in `/usr/local/bin`) rather than the OS default if it exists. We do this by adding `/usr/local/bin` to your `$PATH` environment variable:
 
@@ -72,88 +84,30 @@ One thing we need to do is tell the system to use programs installed by Hombrew 
 
 Open a new terminal tab with **Cmd+T** (you should also close the old one), then run the following command to make sure everything works:
 
+    $ brew update
     $ brew doctor
-    
+
 ### Usage
 
 To install a package (or **Formula** in Homebrew vocabulary) simply type:
 
     $ brew install <formula>
-        
+
 To update Homebrew's directory of formulae, run:
 
     $ brew update
-    
-**Note**: I've seen that command fail sometimes because of a bug. If that ever happens, run the following (when you have Git installed):
 
-    $ cd /usr/local
-    $ git fetch origin
-    $ git reset --hard origin/master
 
-To see if any of your packages need to be updated:
-
-    $ brew outdated
-    
-To update a package:
-
-    $ brew upgrade <formula>
-        
-Homebrew keeps older versions of packages installed, in case you want to roll back. That rarely is necessary, so you can do some cleanup to get rid of those old versions:
-
-    $ brew cleanup
-
-To see what you have installed (with their version numbers):
-
-    $ brew list --versions
-
-## Github 
-
-## Atom
 
 ## MySQL
 
 ### Install
 
-We will install [MySQL](http://www.mysql.com/) using Homebrew, which will also install some header files needed for MySQL bindings in different programming languages (MySQL-Python for one).
-
-To install, run:
-
-    $ brew update # Always good to do
     $ brew install mysql
-
-As you can see in the ouput from Homebrew, before we can use MySQL we first need to set it up with:
-
-    $ unset TMPDIR
-    $ mkdir /usr/local/var
-    $ mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix mysql)" --datadir=/usr/local/var/mysql --tmpdir=/tmp
-
-### Usage
-
-To start the MySQL server, use the `mysql.server` tool:
-
     $ mysql.server start
-    
-To stop it when you are done, run:
+    $ mysqladmin -u root password
+    $ mysql -u root -p
 
-    $ mysql.server stop
-    
-You can see the different commands available for `mysql.server` with:
-
-    $ mysql.server --help
-    
-To connect with the command-line client, run:
-
-    $ mysql -uroot
-    
-(Use `exit` to quit the MySQL shell.)
-
-**Note**: By default, the MySQL user `root` has no password. It doesn't really matter for a local development database. If you wish to change it though, you can use `$ mysqladmin -u root password 'new-password'`.
-
-### MySQL Workbench
-
-In terms of a GUI client for MySQL, I'm used to the official and free [MySQL Workbench](http://www.mysql.com/products/workbench/). But feel free to use whichever you prefer.
-
-You can find the MySQL Workbench download [here](http://www.mysql.com/downloads/workbench/). (**Note**: It will ask you to sign in, you don't need to, just click on "No thanks, just start my download!" at the bottom.)
 
 ## Node.js
 
@@ -161,7 +115,7 @@ Install [Node.js](http://nodejs.org/) with Homebrew:
 
     $ brew update
     $ brew install node
-    
+
 The formula also installs the [npm](https://npmjs.org/) package manager. However, as suggested by the Homebrew output, we need to add `/usr/local/share/npm/bin` to our path so that npm-installed modules with executables will have them picked up.
 
 To do so, add this line to your `~/.path` file, before the `export PATH` line:
@@ -169,7 +123,7 @@ To do so, add this line to your `~/.path` file, before the `export PATH` line:
 ```bash
 PATH=/usr/local/share/npm/bin:$PATH
 ```
-        
+
 Open a new terminal for the `$PATH` changes to take effect.
 
 We also need to tell npm where to find the Xcode Command Line Tools, by running:
@@ -215,9 +169,9 @@ To uninstall a package:
 
 ##JSHint
 
-JSHint is a JavaScript developer's best friend. 
+JSHint is a JavaScript developer's best friend.
 
-If the extra credit assignment to install Sublime Package Manager was completed, JSHint can be run as part of Sublime Text. 
+If the extra credit assignment to install Sublime Package Manager was completed, JSHint can be run as part of Sublime Text.
 
 Install JSHint via npm (global install preferred)
 
@@ -246,7 +200,7 @@ This should output some information about the compiler:
 
     lessc 1.5.1 (LESS Compiler) [JavaScript]
 
-Okay, LESS is installed and running. Great! 
+Okay, LESS is installed and running. Great!
 
 ### Usage
 
@@ -269,11 +223,11 @@ Read more about LESS on their page here: http://lesscss.org/
 Assuming that you have an account (sign up if you don't), let's install the [Heroku Client](https://devcenter.heroku.com/articles/using-the-cli) for the command-line. Heroku offers a Mac OS X installer, the [Heroku Toolbelt](https://toolbelt.heroku.com/), that includes the client. But for these kind of tools, I prefer using Homebrew. It allows us to keep better track of what we have installed. Luckily for us, Homebrew includes a `heroku-toolbelt` formula:
 
     $ brew install heroku-toolbelt
-    
+
 The formula might not have the latest version of the Heroku Client, which is updated pretty often. Let's update it now:
 
     $ heroku update
-    
+
 Don't be afraid to run `heroku update` every now and then to always have the most recent version.
 
 ### Usage
@@ -281,18 +235,18 @@ Don't be afraid to run `heroku update` every now and then to always have the mos
 Login to your Heroku account using your email and password:
 
     $ heroku login
-    
+
 If this is a new account, and since you don't already have a public **SSH key** in your `~/.ssh` directory, it will offer to create one for you. Say yes! It will also upload the key to your Heroku account, which will allow you to deploy apps from this computer.
 
 If it didn't offer create the SSH key for you (i.e. your Heroku account already has SSH keys associated with it), you can do so manually by running:
 
      $ mkdir ~/.ssh
      $ ssh-keygen -t rsa
-     
+
 Keep the default file name and skip the passphrase by just hitting Enter both times. Then, add the key to your Heroku account:
 
     $ heroku keys:add
-    
+
 Once the key business is done, you're ready to deploy apps! Heroku has a great [Getting Started](https://devcenter.heroku.com/articles/python) guide, so I'll let you refer to that (the one linked here is for Python, but there is one for every popular language). Heroku uses Git to push code for deployment, so make sure your app is under Git version control. A quick cheat sheet (if you've used Heroku before):
 
     $ cd myapp/
@@ -300,7 +254,7 @@ Once the key business is done, you're ready to deploy apps! Heroku has a great [
     $ git push heroku master
     $ heroku ps
     $ heroku logs -t
-    
+
 The [Heroku Dev Center](https://devcenter.heroku.com/) is full of great resources, so be sure to check it out!
 
 ## MongoDB
@@ -422,9 +376,5 @@ Here is a quick list of some apps I use, and that you might find useful as well:
 - [1Password](https://agilebits.com/onepassword): Allows you to securely store your login and passwords. Even if you only use a few different passwords (they say you shouldn't!), this is really handy to keep track of all the accounts you sign up for! Also, they have a mobile app so you always have all your passwords with you (syncs with Dropbox). A little pricey though. There are free alternatives. **($50 for Mac app, $18 for iOS app)**
 - [Marked](http://markedapp.com/): As a developer, most of the stuff you write ends up being in [Markdown](http://daringfireball.net/projects/markdown/). In fact, this `README.md` file (possibly the most important file of a GitHub repo) is indeed in Markdown, written in Sublime Text, and I use Marked to preview the results everytime I save. **($4)**
 - [Path Finder](http://cocoatech.com/pathfinder/): I love OSX, it's Unix so great for developers, and all of it just works and looks pretty! Only thing I "miss" from Windows (OMG what did he say?), is a decent file explorer. I think Finder is a pain to use. So I gladly paid for this alternative, but I understand others might find it expensive just to not have to use Finder. **($40)**
-- [Evernote](https://evernote.com/): If I don't write something down, I'll forget it. As a developer, you learn so many new things every day, and technology keeps changing, it would be insane to want to keep it all in your head. So take notes, sync them to the cloud, and have them on all your devices. To be honest, I switched to 
+- [Evernote](https://evernote.com/): If I don't write something down, I'll forget it. As a developer, you learn so many new things every day, and technology keeps changing, it would be insane to want to keep it all in your head. So take notes, sync them to the cloud, and have them on all your devices. To be honest, I switched to
 - [Moom](http://manytricks.com/moom/): Don't waste time resizing and moving your windows. Moom makes this very easy. **($10)**
-
-
-
-
