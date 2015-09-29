@@ -1,6 +1,6 @@
 # Mac OS X Dev Setup
 
-This document describes how I set up my development environment on a new OSX machine. It is around set up around [NodeJS](http://nodejs.org/) and general web development. This is heavily modified fork of [/nicolashery/mac-dev-setup](https://github.com/nicolashery/mac-dev-setup), which I used for my original inspiration.
+This document describes how I set up my development environment on a new OSX machine. It is around set up around [NodeJS](http://nodejs.org/), [MeteorJS](https://www.meteor.com/) and general web development. This is heavily modified fork of [/nicolashery/mac-dev-setup](https://github.com/nicolashery/mac-dev-setup), which I used for my original inspiration.
 
 The document assumes you are familiar with a Mac. The steps below were tested on **OS X Yosemite (10.10)**.
 
@@ -90,17 +90,21 @@ Package managers make it so much easier to install and update applications (for 
 
 ### Install
 
- $ xcode-select --install
- $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+xcode-select --install
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
 
 One thing we need to do is tell the system to use programs installed by Hombrew (in `/usr/local/bin`) rather than the OS default if it exists. We do this by adding `/usr/local/bin` to your `$PATH` environment variable:
 
-    $ echo 'export PATH="/usr/local/sbin:/usr/local/bin:$PATH"' >> ~/.bash_profile
+    echo 'export PATH="/usr/local/sbin:/usr/local/bin:$PATH"' >> ~/.bash_profile
 
 Open a new terminal tab with **Cmd+T** (you should also close the old one), then run the following command to make sure everything works:
 
-    $ brew update
-    $ brew doctor
+```
+brew update
+brew doctor
+```
 
 ### Usage
 
@@ -122,35 +126,35 @@ To update Homebrew's directory of formulae, run:
 
 ### Install
 
-    $ brew install mysql
-    $ mysql.server start
-    $ mysqladmin -u root password
-    $ mysql -u root -p
+    brew install mysql
+    mysql.server start
+    mysqladmin -u root password
+    mysql -u root -p
 
 
 ## Node.js
 
 Install [Node.js](http://nodejs.org/) with Homebrew:
 
-    $ brew update
-    $ brew install node
+    brew update
+    brew install node
 
 ## MongoDB
 
 [MongoDB](http://www.mongodb.org/) is a popular [NoSQL](http://en.wikipedia.org/wiki/NoSQL) database.
 
-    $ brew update
-    $ brew install mongo
+    brew update
+    brew install mongo
 
 ### Usage
 
 In a terminal, start the MongoDB server:
 
-    $ mongod
+    mongod
 
 In another terminal, connect to the database with the Mongo shell using:
 
-    $ mongo
+    mongo
 
 I'll let you refer to MongoDB's [Getting Started](http://docs.mongodb.org/manual/tutorial/getting-started/) guide for more!
 
@@ -162,22 +166,22 @@ I'll let you refer to MongoDB's [Getting Started](http://docs.mongodb.org/manual
 
 To install Redis, use Homebrew:
 
-    $ brew update
-    $ brew install redis
+    brew update
+    brew install redis
 
 ### Usage
 
 Start a local Redis server using the default configuration settings with:
 
-    $ redis-server
+    redis-server
 
 For advanced usage, you can tweak the configuration file at `/usr/local/etc/redis.conf` (I suggest making a backup first), and use those settings with:
 
-    $ redis-server /usr/local/etc/redis.conf
+    redis-server /usr/local/etc/redis.conf
 
 In another terminal, connect to the server with the Redis command-line interface using:
 
-    $ redis-cli
+    redis-cli
 
 I'll let you refer to Redis' [documentation](http://redis.io/documentation) or other tutorials for more information.
 
