@@ -116,11 +116,22 @@ To update Homebrew's directory of formulae, run:
 
     $ brew update
 
+## Node.js
+
+Install [Node.js](http://nodejs.org/) with Homebrew:
+
+Option A - Install Latest
+    $ brew install node
+
+Option B - Install 0.10 (Meteor compatible)
+    $brew tap homebrew/versions
+    $brew install node010
+
 ## Cordova
-`npm install -g cordova`
+    $ npm install -g cordova
 
 ## Meteor.JS
-`curl https://install.meteor.com/ | sh`
+    $ curl https://install.meteor.com/ | sh
 
 ## MySQL
 
@@ -130,14 +141,6 @@ To update Homebrew's directory of formulae, run:
     mysql.server start
     mysqladmin -u root password
     mysql -u root -p
-
-
-## Node.js
-
-Install [Node.js](http://nodejs.org/) with Homebrew:
-
-    brew update
-    brew install node
 
 ## MongoDB
 
